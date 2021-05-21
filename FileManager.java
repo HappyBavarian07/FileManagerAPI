@@ -3,6 +3,7 @@ package me.happyBavarian07.API;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,9 +13,11 @@ import me.happyBavarian07.regeln.caPlugin;
 public class FileManager {
 	
 	caPlugin plugin;
+	Logger log;
 	
 	public FileManager(caPlugin plugin) {
 		this.plugin = plugin;
+		this.log = plugin.getLogger();
 	}
 	
 	public void createFile(String path, String name, String fileending) {
@@ -26,12 +29,13 @@ public class FileManager {
 		}
 		if(!f.exists()) {
 			try {
+				log.log(Level.FINE, "Saved " + f + " successfully!");
 				f.createNewFile();
 			} catch (IOException e) {
-				plugin.getLogger().log(Level.SEVERE, "Could not save File " + f, e);
+				log.log(Level.SEVERE, "Could not save File " + f, e);
 			}
 		} else {
-			plugin.getLogger().log(Level.WARNING, "File " + f + " already exists!");
+			log.log(Level.WARNING, "File " + f + " already exists!");
 			return;
 		}
 	}
@@ -44,12 +48,13 @@ public class FileManager {
 			f = new File(plugin.getDataFolder() + "/" + path, name + "." + fileending);
 		}
 		if(f.exists()) {
+			log.log(Level.FINE, "Saved " + f + " successfully!");
 			return f;
 		}
 		return null;
 	}
 	
-	public FileConfiguration getFileConfig(String path, String name, String fileending) {
+	public FileConfiguration getConfig(String path, String name, String fileending) {
 		File f;
 		if(path == "") {
 			f = new File(plugin.getDataFolder(), name + "." + fileending);
@@ -59,6 +64,7 @@ public class FileManager {
 		FileConfiguration cfg;
 		if(f.exists()) {
 			cfg = YamlConfiguration.loadConfiguration(f);
+			log.log(Level.FINE, "Loaded FileConfig for File " + f + " successfully!");
 			return cfg;
 		}
 		return null;
@@ -71,10 +77,11 @@ public class FileManager {
 			f = new File(plugin.getDataFolder() + "/" + path, name + "." + fileending);
 		}
 		if(f.exists()) {
+			log.log(Level.FINE, "Deleted " + f + " successfully!");
 			f.delete();
 			return;
 		} else {
-			plugin.getLogger().log(Level.WARNING, "File " + f + " doesn't exists!");
+			log.log(Level.WARNING, "File " + f + " doesn't exists!");
 		}
 		return;
 	}
