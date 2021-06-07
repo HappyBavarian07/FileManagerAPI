@@ -26,6 +26,7 @@ public class FileManager {
 			f = new File(plugin.getDataFolder(), name + "." + fileending);
 		} else {
 			f = new File(plugin.getDataFolder() + "/" + path, name + "." + fileending);
+			f.getParentFile().mkdir();
 		}
 		if(!f.exists()) {
 			try {
@@ -37,6 +38,16 @@ public class FileManager {
 		} else {
 			log.log(Level.WARNING, "File " + f + " already exists!");
 			return;
+		}
+	}
+	
+	public void saveConfig(String path, String name, String fileending) {
+		FileConfiguration config = YamlConfiguration.loadConfiguration(getFile(path, name, fileending));
+		File file = getFile(path, name, fileending);
+		try {
+			config.save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
